@@ -9,4 +9,20 @@ class InvoiceItem < ApplicationRecord
   def price_display
     unit_price / 100.00
   end
+
+  def find_discount
+    item.merchant.bulk_discounts.where('quantity <= ?', quantity).order('percentage DESC').first
+  end
+
+  def revenue
+    (unit_price * quantity) / 100.00
+  end
+
+  def discounted_revenue
+    if find_discount.blank?
+      revenue
+    else
+      ((1 - (find_discount.percentage / 100.00)) * revenue).round(2)
+    end
+  end
 end
