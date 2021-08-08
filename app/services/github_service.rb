@@ -1,19 +1,13 @@
-class GithubService
+class GithubService < ApiService
   def self.repo_info
-    response = Faraday.get("https://api.github.com/repos/InOmn1aParatus/little-esty-shop")
-    body = response.body
-    JSON.parse(body, symbolize_names: true)
+    get_link("https://api.github.com/repos/InOmn1aParatus/little-esty-shop")
   end
 
   def self.contributor_info
-    response = Faraday.get("https://api.github.com/repos/InOmn1aParatus/little-esty-shop/contributors")
-    body = response.body
-    JSON.parse(body, symbolize_names: true)
+    get_link("https://api.github.com/repos/InOmn1aParatus/little-esty-shop/contributors")
   end
 
   def self.pulls_info
-    response = Faraday.get("https://api.github.com/repos/InOmn1aParatus/little-esty-shop/pulls?state=closed")
-    body = response.body
-    JSON.parse(body, symbolize_names: true)
+    get_link("https://api.github.com/repos/InOmn1aParatus/little-esty-shop/pulls?state=closed")
   end
 end
