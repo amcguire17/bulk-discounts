@@ -6,13 +6,7 @@ RSpec.describe 'Merchant Dashboard' do
     before :each do
       @merchant = create(:merchant)
 
-      @customer_1 = create(:customer)
-      @customer_2 = create(:customer)
-      @customer_3 = create(:customer)
-      @customer_4 = create(:customer)
-      @customer_5 = create(:customer)
-      @customer_6 = create(:customer)
-      @customer_7 = create(:customer)
+      @customer_1, @customer_2, @customer_3, @customer_4, @customer_5, @customer_6, @customer_7  = create_list(:customer, 7)
 
       @invoice_1 = create(:invoice, customer: @customer_1, created_at: '2021-07-10 00:00:00 UTC')
       @invoice_2 = create(:invoice, customer: @customer_2, created_at: '2021-07-07 00:00:00 UTC')
@@ -22,34 +16,15 @@ RSpec.describe 'Merchant Dashboard' do
       @invoice_6 = create(:invoice, customer: @customer_6, created_at: '2021-07-11 00:00:00 UTC')
       @invoice_7 = create(:invoice, customer: @customer_7, created_at: '2021-07-08 00:00:00 UTC')
 
-      @transaction_1 = create(:transaction, invoice: @invoice_1)
-      @transaction_2 = create(:transaction, invoice: @invoice_1)
-      @transaction_4 = create(:transaction, invoice: @invoice_2)
-      @transaction_4 = create(:transaction, invoice: @invoice_2)
-      @transaction_5 = create(:transaction, invoice: @invoice_2)
-      @transaction_6 = create(:transaction, invoice: @invoice_2)
-      @transaction_8 = create(:transaction, invoice: @invoice_3)
-      @transaction_8 = create(:transaction, invoice: @invoice_3)
-      @transaction_9 = create(:transaction, invoice: @invoice_3)
-      @transaction_10 = create(:transaction, invoice: @invoice_3)
-      @transaction_11 = create(:transaction, invoice: @invoice_3)
+      @transaction_1, @transaction_2 = create_list(:transaction, 2, invoice: @invoice_1)
+      @transaction_3, @transaction_4, @transaction_5, @transaction_6 = create_list(:transaction, 4, invoice: @invoice_2)
+      @transaction_7, @transaction_8, @transaction_9, @transaction_10, @transaction_11 = create_list(:transaction, 5, invoice: @invoice_3)
       @transaction_12 = create(:transaction, invoice: @invoice_4)
       @transaction_13 = create(:transaction, invoice: @invoice_5)
-      @transaction_14 = create(:transaction, invoice: @invoice_6)
-      @transaction_15 = create(:transaction, invoice: @invoice_6)
-      @transaction_16 = create(:transaction, invoice: @invoice_6)
-      @transaction_17 = create(:transaction, invoice: @invoice_7)
-      @transaction_18 = create(:transaction, invoice: @invoice_7)
-      @transaction_19 = create(:transaction, invoice: @invoice_7)
-      @transaction_20 = create(:transaction, invoice: @invoice_7)
-      @transaction_21 = create(:transaction, invoice: @invoice_7)
-      @transaction_22 = create(:transaction, invoice: @invoice_7)
+      @transaction_14, @transaction_15, @transaction_16 = create_list(:transaction, 3, invoice: @invoice_6)
+      @transaction_17, @transaction_18, @transaction_19, @transaction_20, @transaction_21, @transaction_22 = create_list(:transaction, 6, invoice: @invoice_7)
 
-      @item_1 = create(:item, merchant: @merchant)
-      @item_2 = create(:item, merchant: @merchant)
-      @item_3 = create(:item, merchant: @merchant)
-      @item_4 = create(:item, merchant: @merchant)
-
+      @item_1, @item_2, @item_3, @item_4 = create_list(:item, 4, merchant: @merchant)
 
       @invoice_item_1 = create(:invoice_item, invoice: @invoice_1, item: @item_1, status: :packaged)
       @invoice_item_2 = create(:invoice_item, invoice: @invoice_2, item: @item_1, status: :shipped)
@@ -59,7 +34,7 @@ RSpec.describe 'Merchant Dashboard' do
       @invoice_item_6 = create(:invoice_item, invoice: @invoice_6, item: @item_4, status: :packaged)
       @invoice_item_7 = create(:invoice_item, invoice: @invoice_7, item: @item_4, status: :packaged)
 
-      visit "/merchants/#{@merchant.id}/dashboard"
+      visit merchant_dashboard_index_path(@merchant)
     end
 
     it "displays the merchant name" do
@@ -69,13 +44,19 @@ RSpec.describe 'Merchant Dashboard' do
     it 'displays a link to my items index page and my invoices index page' do
       expect(page).to have_link("My Items")
       click_link("My Items")
-      expect(page).to have_current_path("/merchants/#{@merchant.id}/items")
+      expect(page).to have_current_path(merchant_items_path(@merchant))
 
-      visit "/merchants/#{@merchant.id}/dashboard"
+      visit merchant_dashboard_index_path(@merchant)
 
       expect(page).to have_link("My Invoices")
       click_link("My Invoices")
-      expect(page).to have_current_path("/merchants/#{@merchant.id}/invoices")
+      expect(page).to have_current_path(merchant_invoices_path(@merchant))
+    end
+
+    it 'displays link to merchants discounts page' do
+      expect(page).to have_link("My Discounts")
+      click_link("My Discounts")
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant))
     end
 
     it 'displays the names of the top 5 customers by successfull transactions' do
