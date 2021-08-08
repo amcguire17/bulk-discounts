@@ -18,29 +18,29 @@
 
 <body>
   <header>Little Esty Shop</header>
-  <%= @repo.name %>
-  <div class="col-4 mt-3">
-    <table class="table table-sm table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th>Contributors</th>
-          <th>Commits</th>
-          <th>Pulls</th>
-        </tr>
-      </thead>
-      <% @repo_contributors.contributors.each do |contributor, contribution| %>
-      <tbody>
-        <tr>
-          <td><%= contributor %></td>
-          <td><%= contribution %></td>
-          <td><%= @repo_pulls.pull_requests[contributor] %></td>
-        </tr>
-      </tbody>
-      <% end %>
-    </table>
-  </div>
+  <!-- <= @repo.name %> -->
+  <!-- <div class="col-4 mt-3"> -->
+    <!-- <table class="table table-sm table-hover"> -->
+      <!-- <thead class="table-dark"> -->
+        <!-- <tr> -->
+          <!-- <th>Contributors</th> -->
+          <!-- <th>Commits</th> -->
+          <!-- <th>Pulls</th> -->
+        <!-- </tr> -->
+      <!-- </thead> -->
+      <!-- < @repo_contributors.contributors.each do |contributor, contribution| %> -->
+      <!-- <tbody> -->
+        <!-- <tr> -->
+          <!-- <td><= contributor %></td> -->
+          <!-- <td><= contribution %></td> -->
+          <!-- <td><= @repo_pulls.pull_requests[contributor] %></td> -->
+        <!-- </tr> -->
+      <!-- </tbody> -->
+      <!-- <# end %> -->
+    <!-- </table> -->
+  <!-- </div> -->
 
-  <h4>Total Pull Requests: <%= @repo_pulls.pull_requests.values.sum %></h4>
+  <!-- <h4>Total Pull Requests: <= @repo_pulls.pull_requests.values.sum %></h4> -->
   <%= yield %>
 
   <!-- Option 1: Bootstrap Bundle with Popper -->
