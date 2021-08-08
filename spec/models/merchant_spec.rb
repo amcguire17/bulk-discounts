@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe Merchant, type: :model do
   describe 'relationships' do
     it { should have_many(:items) }
+    it { should have_many(:bulk_discounts) }
   end
 
   describe 'validations' do
@@ -79,7 +80,7 @@ RSpec.describe Merchant, type: :model do
         expect(@merchant_3.top_revenue_day).to eq('2020-06-24 21:54:10 UTC')
       end
     end
-    
+
     describe '#items_enabled' do
       it 'returns all merchants items with status enabled' do
         merchant_1 = create(:merchant, status: 'enabled')
