@@ -2,6 +2,7 @@ class Merchant < ApplicationRecord
   validates :name, presence: true
   validates :status, presence: true
   has_many :items, :dependent => :destroy
+  has_many :bulk_discounts, :dependent => :destroy
 
   def self.top_five_by_revenue
     joins(items: [invoices: :transactions])
