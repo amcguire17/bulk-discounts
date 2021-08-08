@@ -7,11 +7,11 @@ RSpec.describe Invoice, type: :model do
     it { should have_many(:transactions) }
     it { should have_many(:items).through(:invoice_items) }
   end
-  
-   describe 'validations' do
+
+  describe 'validations' do
     it { should validate_presence_of(:status) }
   end
-  
+
   describe 'class methods' do
     describe '::incomplete_invoices' do
       it 'retrieves invoices with unshipped items, ordered by creation date' do
@@ -33,8 +33,8 @@ RSpec.describe Invoice, type: :model do
         expect(Invoice.incomplete_invoices[1]).to eq(invoice_5)
       end
     end
-    
-     describe '::merchants_invoices' do
+
+    describe '::merchants_invoices' do
       it 'returns all invoices for a specific merchant' do
         merchant_1 = create(:merchant)
         merchant_2 = create(:merchant)
@@ -85,7 +85,32 @@ RSpec.describe Invoice, type: :model do
         )
         expect(invoice.total_revenue).to eq(2)
       end
-
+    end
+    describe '#total_discounted_revenue' do
+      it 'calculates total discounted revenue for invoice' do
+        merchant = create(:merchant)
+        invoice = create(:invoice)
+        item1 = create(:item, merchant: merchant)
+        item2 = create(:item, merchant: merchant)
+        invoice_item1 = InvoiceItem.create!(
+          invoice: invoice,
+          item: item1,
+          quantity: 5,
+          unit_price: 1000,
+          status: 0
+        )
+        invoice_item2 = InvoiceItem.create!(
+          invoice: invoice,
+          item: item2,
+          quantity: 1,
+          unit_price: 1500,
+          status: 0
+        )
+        bulk_discount = merchant.bulk_discounts.create!(quantity: 5, percentage: 15)
+        expect(invoice.total_discounted_revenue).to eq(57.50)
+      end
+    end
+    describe '#created_at_display' do
       it 'displays creation time in simple format' do
         invoice = create(:invoice, created_at: 'Wed, 28 Jul 2021 21:49:20 UTC +00:00')
         expect(invoice.created_at_display).to eq('Wednesday, July 28, 2021')

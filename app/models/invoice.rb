@@ -19,7 +19,11 @@ class Invoice < ApplicationRecord
   end
 
   def total_revenue
-    invoice_items.sum("unit_price * quantity") / 100.00
+    invoice_items.sum { |invoice_item| invoice_item.revenue }
+  end
+
+  def total_discounted_revenue
+    invoice_items.sum { |invoice_item| invoice_item.discounted_revenue }
   end
 
   def created_at_display
