@@ -22,7 +22,7 @@ class InvoiceItem < ApplicationRecord
     if find_discount.blank?
       revenue
     else
-      ((1 - (find_discount.percentage / 100.00)) * revenue).round(2)
+      (revenue - ((find_discount.percentage / 100.00) * revenue))
     end
   end
 end

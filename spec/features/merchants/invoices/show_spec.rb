@@ -70,7 +70,6 @@ RSpec.describe 'Merchant Invoices show page' do
   end
 
   it 'links to invoice item discount if one has been applied' do
-    save_and_open_page
     within("#invoice_item-info-#{@invoice_item_1.id}") do
       expect(page).to have_link('Discount Applied')
       click_link 'Discount Applied'

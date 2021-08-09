@@ -49,7 +49,7 @@ RSpec.describe InvoiceItem, type: :model do
     it 'returns discounted revenue for invoice_item' do
       bulk_discount = @merchant.bulk_discounts.create!(percentage: 15, quantity: 5)
       bulk_discount_2 = @merchant.bulk_discounts.create!(percentage: 20, quantity: 7)
-      expect(@invoice_item.discounted_revenue).to eq(622.22)
+      expect(@invoice_item.discounted_revenue).to eq(622.216)
     end
   end
 end
