@@ -16,7 +16,6 @@ RSpec.describe GithubPulls do
       {user:{:login=>"amcguire17"}}
     ]
   end
-
   it 'returns a pull requests attribute' do
     repo = GithubPulls.new(@pulls_info)
     expected = {
