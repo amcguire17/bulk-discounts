@@ -2,8 +2,8 @@ Rails.application.routes.draw do
   root 'welcome#index'
 
   namespace :admin do
-    resources :merchants
-    resources :invoices
+    resources :merchants, except: [:destroy]
+    resources :invoices, only: [:index, :show, :update]
   end
 
   resources :admin, controller: 'admin/dashboard', only: [:index]

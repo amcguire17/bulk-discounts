@@ -1,4 +1,5 @@
 require 'rails_helper'
+
 RSpec.describe 'Edit Item Page' do
   before :each do
     @merchant = create(:merchant, name: 'Eucalyptus')

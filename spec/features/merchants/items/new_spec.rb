@@ -1,8 +1,8 @@
 require 'rails_helper'
+
 RSpec.describe 'New Item Page' do
   before :each do
     @merchant = create(:merchant, name: 'Eucalyptus')
-
     visit new_merchant_item_path(@merchant)
   end
   it 'can enter information and submit to be redirected to merchant item index and can see new item' do

@@ -13,7 +13,6 @@ RSpec.describe GithubService do
     expect(repo).to have_key(:id)
     expect(repo).to have_key(:name)
   end
-
   it 'returns the contributor data' do
     mock_response = "[{\"login\":\"InOmn1aParatus\",\"id\":56685055,\"contributions\":80},{\"login\":\"chsweet\",\"id\":81600649,\"contributions\":1000}]"
 
@@ -31,7 +30,6 @@ RSpec.describe GithubService do
     expect(repo[1]).to have_key(:id)
     expect(repo[1]).to have_key(:contributions)
   end
-
   it 'returns the pulls data' do
     mock_response = "[
     {\"id\":702945116,\"number\":55,\"state\":\"closed\",\"title\":\"Api consumption\",\"user\":{\"login\":\"InOmn1aParatus\",\"id\":56685055}},

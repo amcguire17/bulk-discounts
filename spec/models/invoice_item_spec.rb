@@ -1,41 +1,26 @@
 require 'rails_helper'
 
 RSpec.describe InvoiceItem, type: :model do
-
   describe 'relationships' do
     it { should belong_to(:invoice) }
     it { should belong_to(:item) }
   end
-
   describe 'validations' do
     it { should validate_presence_of(:quantity) }
     it { should validate_presence_of(:unit_price) }
     it { should validate_presence_of(:status) }
   end
-
   before :each do
     @merchant = create(:merchant)
     @invoice = create(:invoice)
     @item = create(:item, merchant: @merchant)
-    @invoice_item = InvoiceItem.create!(
-      invoice: @invoice,
-      item: @item,
-      quantity: 7,
-      unit_price: 11111,
-      status: 0
-    )
+    @invoice_item = InvoiceItem.create!(invoice: @invoice, item: @item, quantity: 7, unit_price: 11111, status: 0)
   end
-
   describe 'instance methods' do
     describe '#price_display' do
       it 'displays unit_price in dollar amount' do
         expect(@invoice_item.price_display).to eq(111.11)
       end
-    end
-  end
-  describe '#revenue' do
-    it 'returns total revenue for invoice_item' do
-      expect(@invoice_item.revenue).to eq(777.77)
     end
   end
   describe '#find_discount' do

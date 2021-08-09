@@ -10,7 +10,6 @@ RSpec.describe GithubContributor do
       {id: 8150461,:login=>"BrianZanti", :contributions=>33}
     ]
   end
-
   it 'returns a contributors attribute' do
     repo = GithubContributor.new(@contributor_info)
     expected = {
