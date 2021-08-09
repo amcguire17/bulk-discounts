@@ -2,9 +2,10 @@ require 'rails_helper'
 
 RSpec.describe 'admin merchant create page' do
   before :each do
-    visit admin_merchants_path
+    visit new_admin_merchant_path
   end
   it 'admin merchant index page has link to create new merchant' do
+    visit admin_merchants_path
     click_link 'New Merchant'
     expect(current_path).to eq(new_admin_merchant_path)
   end

@@ -58,8 +58,8 @@ RSpec.describe 'Merchant Items Index Page' do
   describe 'Items Top Revenue Earners' do
     before :each do
       @customer = create(:customer)
-      @invoice_1 = create(:invoice, customer: customer, status: 'completed')
-      @invoice_2 = create(:invoice, customer: customer, status: 'completed', created_at: '2021-03-06 21:54:10 UTC')
+      @invoice_1 = create(:invoice, customer: @customer, status: 'completed')
+      @invoice_2 = create(:invoice, customer: @customer, status: 'completed', created_at: '2021-03-06 21:54:10 UTC')
       @item_4, @item_5, @item_6 = create_list(:item, 3, merchant: @merchant)
       @invoice_item_1 = create(:invoice_item, invoice: @invoice_1, item: @item_1, quantity: 1, unit_price: 5000)
       @invoice_item_2 = create(:invoice_item, invoice: @invoice_1, item: @item_2, quantity: 1, unit_price: 2000)

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Admin Deshboard Page' do
+RSpec.describe 'Admin Dashboard Page' do
   before :each do
     @customer = create(:customer)
     @invoice_1, @invoice_2, @invoice_3 = create_list(:invoice, 3, customer: @customer, status: 0)
@@ -69,7 +69,7 @@ RSpec.describe 'Admin Deshboard Page' do
     end
     it 'displays creation dates of invoices ordered oldest to newest' do
       within("#incomplete_invoices") do
-        expect(@invoice_4.display_date).to appear_before(@invoice_5.display_date)
+        expect(@invoice_4.created_at_display).to appear_before(@invoice_5.created_at_display)
       end
     end
   end
