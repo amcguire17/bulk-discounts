@@ -1,26 +1,31 @@
 <%= render 'dashboard/merch_nav' %>
 
-<h3> <%= "Invoice ##{@invoice.id}" %> </h3>
+<h3> Invoice #<%= @invoice.id %> </h3>
 
-<p> <%= "Status: #{@invoice.status}" %> </p>
-<p> <%= "Created On: #{@invoice.created_at.strftime('%A, %B %d, %Y')}" %> </p>
+<p> Status: <%= @invoice.status %> </p>
+<p> Created On: <%= @invoice.created_at.strftime('%A, %B %d, %Y') %> </p>
 
 <h4> Customer: </h4>
 <p> <%= @invoice.customer.first_name %> <%= @invoice.customer.last_name %> </p>
 
 <h3>Invoice Item Info:</h3>
- <% @invoice.invoice_items.each do |inv_item| %>
- <section id="invoice_item-info-<%= inv_item.id %>">
- <ul>
-   <li><%= "Invoice item name: #{inv_item.item.name}" %></li>
-   <li><%= "Invoice item quantity: #{inv_item.quantity}" %></li>
-   <li><%= "Invoice item price: #{inv_item.unit_price}" %></li>
-   <li>Invoice item status: <%= inv_item.status %><%= form_with url:"/merchants/#{@merchant.id}/invoice_item/#{inv_item.id}", method: :patch, local: true do |form|%>
-   <%= form.select :status, [:pending, :packaged, :shipped], selected: inv_item.status %></li>
-  <%= form.submit "Update Item Status"%>
-  <% end %>
-</ul>
-</section>
+<% @invoice.invoice_items.each do |inv_item| %>
+  <section id="invoice_item-info-<%= inv_item.id %>">
+    <ul>
+     <li>Invoice item name: <%= inv_item.item.name %></li>
+     <li>Invoice item quantity: <%= inv_item.quantity %></li>
+     <li>Invoice item price: <%= inv_item.unit_price %></li>
+     <li>Invoice item status: <%= inv_item.status %></li>
+     <%= form_with url:"/merchants/#{@merchant.id}/invoice_item/#{inv_item.id}", method: :patch, local: true do |form|%>
+      <%= form.select :status, [:pending, :packaged, :shipped], selected: inv_item.status %>
+      <%= form.submit "Update Item Status"%>
+     <% end %>
+     <% if !inv_item.find_discount.blank? %>
+      <%= link_to 'Discount Applied', merchant_bulk_discount_path(@merchant, inv_item.find_discount) %>
+     <% end %>
+    </ul>
+  </section>
 <% end %>
 
-<h3><%= "Total revenue from invoice: #{@invoice.total_revenue}" %></h3>
+<h3>Total revenue from invoice: <%= number_to_currency(@invoice.total_revenue) %></h3>
+<h3>Total discounted revenue from invoice: <%= number_to_currency(@invoice.total_discounted_revenue) %></h3>
