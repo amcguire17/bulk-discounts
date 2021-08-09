@@ -6,7 +6,6 @@ RSpec.describe Item, type: :model do
     it { should have_many(:invoice_items) }
     it { should have_many(:invoices).through(:invoice_items) }
   end
-
   describe 'validations' do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:description) }
@@ -14,13 +13,10 @@ RSpec.describe Item, type: :model do
     it { should validate_numericality_of(:unit_price) }
     it { should validate_presence_of(:status) }
   end
-
   before :each do
     @item_1 = create(:item, status: 'enabled')
-    @item_2 = create(:item)
-    @item_3 = create(:item)
+    @item_2, @item_3 = create_list(:item, 2)
   end
-
   describe 'class methods' do
     describe '.status_enabled' do
       it 'returns all items with status enabled' do
@@ -35,16 +31,9 @@ RSpec.describe Item, type: :model do
     describe '.ready_to_ship' do
       it 'returns all items with invoice status pending' do
         customer = create(:customer)
-
-        invoice_1 = create(:invoice, customer: customer, status: 'in progress')
-        invoice_2 = create(:invoice, customer: customer, status: 'in progress')
-        invoice_3 = create(:invoice, customer: customer, status: 'in progress')
+        invoice_1, invoice_2, invoice_3, invoice_5, invoice_6, invoice_7 = create_list(:invoice, 6, customer: customer, status: 'in progress')
         invoice_4 = create(:invoice, customer: customer, status: :cancelled)
-        invoice_5 = create(:invoice, customer: customer, status: 'in progress')
-        invoice_6 = create(:invoice, customer: customer, status: 'in progress')
-        invoice_7 = create(:invoice, customer: customer, status: 'in progress')
         invoice_8 = create(:invoice, customer: customer, status: :completed)
-
         transaction_1 = create(:transaction, invoice: invoice_1)
         transaction_2 = create(:transaction, invoice: invoice_2)
         transaction_3 = create(:transaction, invoice: invoice_3)
@@ -53,15 +42,14 @@ RSpec.describe Item, type: :model do
         transaction_6 = create(:transaction, invoice: invoice_6, result: 'failed')
         transaction_7 = create(:transaction, invoice: invoice_7)
         transaction_8 = create(:transaction, invoice: invoice_8)
-
-        invoice_item_1 = create(:invoice_item, item_id: @item_1.id, invoice_id: invoice_1.id, status: :packaged)
-        invoice_item_2 = create(:invoice_item, item_id: @item_2.id, invoice_id: invoice_2.id, status: :packaged)
-        invoice_item_3 = create(:invoice_item, item_id: @item_3.id, invoice_id: invoice_3.id, status: :packaged)
-        invoice_item_4 = create(:invoice_item, item_id: @item_1.id, invoice_id: invoice_4.id, status: :packaged)
-        invoice_item_5 = create(:invoice_item, item_id: @item_2.id, invoice_id: invoice_5.id, status: :packaged)
-        invoice_item_6 = create(:invoice_item, item_id: @item_3.id, invoice_id: invoice_6.id, status: :packaged)
-        invoice_item_7 = create(:invoice_item, item_id: @item_1.id, invoice_id: invoice_7.id, status: :packaged)
-        invoice_item_8 = create(:invoice_item, item_id: @item_2.id, invoice_id: invoice_8.id, status: :shipped)
+        invoice_item_1 = create(:invoice_item, item: @item_1, invoice: invoice_1, status: :packaged)
+        invoice_item_2 = create(:invoice_item, item: @item_2, invoice: invoice_2, status: :packaged)
+        invoice_item_3 = create(:invoice_item, item: @item_3, invoice: invoice_3, status: :packaged)
+        invoice_item_4 = create(:invoice_item, item: @item_1, invoice: invoice_4, status: :packaged)
+        invoice_item_5 = create(:invoice_item, item: @item_2, invoice: invoice_5, status: :packaged)
+        invoice_item_6 = create(:invoice_item, item: @item_3, invoice: invoice_6, status: :packaged)
+        invoice_item_7 = create(:invoice_item, item: @item_1, invoice: invoice_7, status: :packaged)
+        invoice_item_8 = create(:invoice_item, item: @item_2, invoice: invoice_8, status: :shipped)
 
         expect(Item.ready_to_ship).to eq([@item_1, @item_2, @item_3, @item_2, @item_1])
       end
@@ -69,11 +57,8 @@ RSpec.describe Item, type: :model do
     describe '.popular_items' do
       it 'returns top 5 items by revenue' do
         customer = create(:customer)
-        invoice_1 = create(:invoice, customer: customer, status: 'completed')
-        invoice_2 = create(:invoice, customer: customer, status: 'completed')
-        item_4 = create(:item)
-        item_5 = create(:item)
-        item_6 = create(:item)
+        invoice_1, invoice_2 = create_list(:invoice, 2, customer: customer, status: 'completed')
+        item_4, item_5, item_6 = create_list(:item, 3)
         invoice_item_1 = create(:invoice_item, invoice: invoice_1, item: @item_1, quantity: 1, unit_price: 5000)
         invoice_item_2 = create(:invoice_item, invoice: invoice_1, item: @item_2, quantity: 1, unit_price: 2000)
         invoice_item_3 = create(:invoice_item, invoice: invoice_1, item: @item_3, quantity: 1, unit_price: 9000)
@@ -100,7 +85,6 @@ RSpec.describe Item, type: :model do
       end
     end
   end
-
   describe 'instance methods' do
     describe '#unit_price_dollars' do
       it 'converts unit price to dollars' do
