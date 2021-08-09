@@ -4,11 +4,9 @@ RSpec.describe 'Welcome Index Page' do
   before :each do
     visit '/'
   end
-
   it 'shows the name of the project' do
     expect(page).to have_content('Little Esty Shop')
   end
-
   it 'can link to admin dashboard and merchants index' do
     expect(page).to have_link('Admin Dashboard')
     expect(page).to have_link('Merchants Index')
