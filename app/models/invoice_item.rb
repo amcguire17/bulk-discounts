@@ -14,15 +14,11 @@ class InvoiceItem < ApplicationRecord
     item.merchant.bulk_discounts.where('quantity <= ?', quantity).order('percentage DESC').first
   end
 
-  def revenue
-    (unit_price * quantity) / 100.00
-  end
-
   def discounted_revenue
     if find_discount.blank?
-      revenue
+      (unit_price * quantity) / 100.00
     else
-      (revenue - ((find_discount.percentage / 100.00) * revenue))
+      ((1 - (find_discount.percentage / 100.00)) * (unit_price * quantity) / 100.00)
     end
   end
 end

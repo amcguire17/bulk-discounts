@@ -33,11 +33,6 @@ RSpec.describe InvoiceItem, type: :model do
       end
     end
   end
-  describe '#revenue' do
-    it 'returns total revenue for invoice_item' do
-      expect(@invoice_item.revenue).to eq(777.77)
-    end
-  end
   describe '#find_discount' do
     it 'returns discount for invoice_item' do
       bulk_discount = @merchant.bulk_discounts.create!(percentage: 15, quantity: 5)
