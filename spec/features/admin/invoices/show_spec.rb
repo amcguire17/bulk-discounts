@@ -40,7 +40,7 @@ RSpec.describe 'Admin Invoice show page' do
     end
     it 'displays total discoutned revenue' do
       merchant = create(:merchant)
-      bulk_discount = merchant.bulk_discounts.create!(quantity: 5, percentage: 15)
+      bulk_discount = merchant.bulk_discounts.create!(name: '5% Discount', quantity: 5, percentage: 15)
       item_2 = create(:item, merchant: merchant)
       invoice_item_2 = InvoiceItem.create!(invoice: @invoice_1, item: item_2, quantity: 5, status: 0, unit_price: 4643)
       visit admin_invoice_path(@invoice_1)

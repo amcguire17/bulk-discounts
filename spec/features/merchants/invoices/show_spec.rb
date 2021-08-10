@@ -9,7 +9,7 @@ RSpec.describe 'Merchant Invoices show page' do
     @item_2 = create(:item, merchant: @merchant)
     @invoice_item_1 = create(:invoice_item, quantity: 5, item: @item_1, invoice: @invoice, status: 1)
     @invoice_item_2 = create(:invoice_item, quantity: 3, item: @item_2, invoice: @invoice, status: 1)
-    @bulk_discount = @merchant.bulk_discounts.create!(quantity: 5, percentage: 15)
+    @bulk_discount = @merchant.bulk_discounts.create!(name: '15% Discount', quantity: 5, percentage: 15)
 
     visit merchant_invoice_path(@merchant, @invoice)
   end

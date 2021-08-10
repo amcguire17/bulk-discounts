@@ -1,58 +1,114 @@
 require 'rails_helper'
 
 RSpec.describe 'Discount Index Page' do
-  before :each do
-    @merchant = create(:merchant)
-    @discount_1 = @merchant.bulk_discounts.create(percentage: 50, quantity: 75)
-    @discount_2 = @merchant.bulk_discounts.create(percentage: 25, quantity: 40)
-    @discount_3 = @merchant.bulk_discounts.create(percentage: 10, quantity: 15)
+  describe 'information and links' do
+    before :each do
+      @merchant = create(:merchant)
+      @discount_1 = @merchant.bulk_discounts.create(name: '50% Discount', percentage: 50, quantity: 75)
+      @discount_2 = @merchant.bulk_discounts.create(name: '25% Discount', percentage: 25, quantity: 40)
+      @discount_3 = @merchant.bulk_discounts.create(name: '10% Discount', percentage: 10, quantity: 15)
 
-    visit merchant_bulk_discounts_path(@merchant)
-  end
-  it 'lists all of bulk discounts and attributes' do
-    within("#discount-#{@discount_1.id}") do
-      expect(page).to have_content(@discount_1.percentage)
-      expect(page).to have_content(@discount_1.quantity)
+      visit merchant_bulk_discounts_path(@merchant)
     end
-    within("#discount-#{@discount_2.id}") do
-      expect(page).to have_content(@discount_2.percentage)
-      expect(page).to have_content(@discount_2.quantity)
+    it 'lists all of bulk discounts and attributes' do
+      within("#discount-#{@discount_1.id}") do
+        expect(page).to have_content(@discount_1.name)
+        expect(page).to have_content(@discount_1.percentage)
+        expect(page).to have_content(@discount_1.quantity)
+      end
+      within("#discount-#{@discount_2.id}") do
+        expect(page).to have_content(@discount_2.name)
+        expect(page).to have_content(@discount_2.percentage)
+        expect(page).to have_content(@discount_2.quantity)
+      end
+      within("#discount-#{@discount_3.id}") do
+        expect(page).to have_content(@discount_3.name)
+        expect(page).to have_content(@discount_3.percentage)
+        expect(page).to have_content(@discount_3.quantity)
+      end
     end
-    within("#discount-#{@discount_3.id}") do
-      expect(page).to have_content(@discount_3.percentage)
-      expect(page).to have_content(@discount_3.quantity)
-    end
-  end
-  it 'links to each discounts show page' do
-    within("#discount-#{@discount_1.id}") do
-      expect(page).to have_link('Discount Page')
-      click_link 'Discount Page'
-      expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_1))
-    end
-    visit merchant_bulk_discounts_path(@merchant)
+    it 'links to each discounts show page' do
+      within("#discount-#{@discount_1.id}") do
+        expect(page).to have_link('Discount Page')
+        click_link 'Discount Page'
+        expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_1))
+      end
+      visit merchant_bulk_discounts_path(@merchant)
 
-    within("#discount-#{@discount_2.id}") do
-      expect(page).to have_link('Discount Page')
-      click_link 'Discount Page'
-      expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_2))
-    end
-    visit merchant_bulk_discounts_path(@merchant)
+      within("#discount-#{@discount_2.id}") do
+        expect(page).to have_link('Discount Page')
+        click_link 'Discount Page'
+        expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_2))
+      end
+      visit merchant_bulk_discounts_path(@merchant)
 
-    within("#discount-#{@discount_3.id}") do
-      expect(page).to have_link('Discount Page')
-      click_link 'Discount Page'
-      expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_3))
+      within("#discount-#{@discount_3.id}") do
+        expect(page).to have_link('Discount Page')
+        click_link 'Discount Page'
+        expect(current_path).to eq(merchant_bulk_discount_path(@merchant, @discount_3))
+      end
     end
   end
-  it 'lists the next 3 upcoming holidays' do
-    holiday_info = [{:date=>"2021-09-06", :name=>"Labour Day"}, {date: "2021-10-11", name: "Columbus Day"}, {date: "2021-11-11", name: "Veterans Day"}]
-    allow(NagerDateService).to receive(:next_three_holidays).and_return(holiday_info)
-    
-    expect(page).to have_content(holiday_info[0][:name])
-    expect(page).to have_content(holiday_info[0][:date])
-    expect(page).to have_content(holiday_info[1][:name])
-    expect(page).to have_content(holiday_info[1][:date])
-    expect(page).to have_content(holiday_info[2][:name])
-    expect(page).to have_content(holiday_info[2][:date])
+  describe 'holiday section' do
+    before :each do
+      @merchant = create(:merchant)
+      @holiday_info = NagerDateService.next_three_holidays
+      visit merchant_bulk_discounts_path(@merchant)
+    end
+    it 'lists the next 3 upcoming holidays' do
+      within('.holidays') do
+        expect(page).to have_content(@holiday_info[0].name)
+        expect(page).to have_content(@holiday_info[0].date)
+        expect(page).to have_content(@holiday_info[1].name)
+        expect(page).to have_content(@holiday_info[1].date)
+        expect(page).to have_content(@holiday_info[2].name)
+        expect(page).to have_content(@holiday_info[2].date)
+      end
+    end
+    it 'has link to add a discount to holiday' do
+      expect(page).to have_button("Create #{@holiday_info[0].name} Discount")
+      expect(page).to have_button("Create #{@holiday_info[1].name} Discount")
+      expect(page).to have_button("Create #{@holiday_info[2].name} Discount")
+
+      click_button "Create #{@holiday_info[0].name} Discount"
+      expect(current_path).to eq(new_merchant_bulk_discount_path(@merchant))
+    end
+
+    it 'form has prepopulated fields with holiday name and attributes' do
+      click_button "Create #{@holiday_info[0].name} Discount"
+      expect(page).to have_field(:bulk_discount_name, with: 'Labour Day Discount')
+      expect(page).to have_field(:bulk_discount_quantity, with: 2)
+      expect(page).to have_field(:bulk_discount_percentage, with: "30%")
+
+      visit merchant_bulk_discounts_path(@merchant)
+      click_button "Create #{@holiday_info[0].name} Discount"
+      expect(page).to have_field(:bulk_discount_name, with: 'Labour Day Discount')
+      expect(page).to have_field(:bulk_discount_quantity, with: 2)
+      expect(page).to have_field(:bulk_discount_percentage, with: "30%")
+
+      visit merchant_bulk_discounts_path(@merchant)
+      click_button "Create #{@holiday_info[0].name} Discount"
+      expect(page).to have_field(:bulk_discount_name, with: 'Labour Day Discount')
+      expect(page).to have_field(:bulk_discount_quantity, with: 2)
+      expect(page).to have_field(:bulk_discount_percentage, with: "30%")
+    end
+    it 'can update form information and save new holiday discount' do
+      click_button "Create #{@holiday_info[0].name} Discount"
+      fill_in(:bulk_discount_quantity, with: 10)
+      fill_in(:bulk_discount_percentage, with: 30)
+      click_button 'Create Holiday Discount'
+      expect(current_path).to eq(merchant_bulk_discounts_path(@merchant))
+      expect(page).to have_content('Labour Day Discount')
+      expect(page).to have_content('Percentage Discount: 30%')
+      expect(page).to have_content('Quantity Threshold: 10')
+    end
+    it 'has link to show page when a holiday discount has been added' do
+      holiday_discount = @merchant.bulk_discounts.create(name: 'Labour Day Discount', quantity: 5, percentage: 25)
+      visit merchant_bulk_discounts_path(@merchant)
+
+      within('.holidays') do
+        expect(page).to have_link("#{@holiday_info[0].name} Discount")
+      end
+    end
   end
 end
