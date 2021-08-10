@@ -12,6 +12,7 @@ RSpec.describe 'Edit Discount Page' do
     expect(page).to have_field(:bulk_discount_percentage, with: "20%")
   end
   it 'can enter new information and submit to be redirected to merchant item page and see update notice' do
+    fill_in(:bulk_discount_name, with: '15% Discount')
     fill_in(:bulk_discount_quantity, with: 10)
     fill_in(:bulk_discount_percentage, with: 15)
     click_button('Update Discount')

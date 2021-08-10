@@ -2,6 +2,7 @@
 
 <% @merchant.bulk_discounts.each do |discount| %>
   <section id="discount-<%= discount.id %>">
+    <h3><%= discount.name %></h3>
     <p>Percentage Discount: <%= number_to_percentage(discount.percentage, precision: 0) %></p>
     <p>Quantity Threshold: <%= discount.quantity %></p>
     <%= link_to 'Discount Page',  merchant_bulk_discount_path(@merchant, discount) %>
@@ -13,7 +14,10 @@
   <h3>Upcoming Holidays:</h3>
   <ul>
     <% NagerDateService.next_three_holidays.each do |holiday| %>
-      <li><%= holiday.name %>: <%= holiday.date %></li>
+      <li>
+        <%= holiday.name %>: <%= holiday.date %>
+        <%= button_to "Create #{holiday.name} Discount", new_merchant_bulk_discount_path(@merchant), { params: { holiday: "#{holiday.name}"}, method: :get } %>
+      </li>
     <% end %>
   </ul>
 </section>

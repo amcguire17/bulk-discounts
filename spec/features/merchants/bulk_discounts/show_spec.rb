@@ -7,6 +7,7 @@ RSpec.describe 'Discount Show Page' do
     visit merchant_bulk_discount_path(@merchant, @discount)
   end
   it 'shows discount attributes' do
+    expect(page).to have_content(@discount.name)
     expect(page).to have_content(@discount.quantity)
     expect(page).to have_content(@discount.percentage)
   end

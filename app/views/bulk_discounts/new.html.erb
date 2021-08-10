@@ -2,4 +2,16 @@
 
 <%= flash[:alert] %>
 
-<%= render partial: 'form', locals: { button_name: 'Create Discount' } %>
+<% if params[:holiday] %>
+  <%= form_with model: [@merchant, @discount], local: true do |f| %>
+    <%= f.label :name, 'Discount Name: ' %>
+    <%= f.text_field :name , :value => "#{params[:holiday]} Discount"%>
+    <%= f.label :quantity, 'Quantity Threshold: ' %>
+    <%= f.text_field :quantity, :value => 2 %>
+    <%= f.label :percentage, 'Discount Percentage: ' %>
+    <%= f.text_field :percentage, :value => (number_to_percentage(30, precision: 0)) %>
+    <%= f.submit 'Create Holiday Discount' %>
+    <% end %>
+<% else %>
+  <%= render partial: 'form', locals: { button_name: 'Create Discount' } %>
+<% end %>
