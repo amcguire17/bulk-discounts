@@ -16,7 +16,11 @@
     <% NagerDateService.next_three_holidays.each do |holiday| %>
       <li>
         <%= holiday.name %>: <%= holiday.date %>
-        <%= button_to "Create #{holiday.name} Discount", new_merchant_bulk_discount_path(@merchant), { params: { holiday: "#{holiday.name}"}, method: :get } %>
+        <% if @merchant.bulk_discounts.find_holiday_discount(holiday.name).blank? %>
+          <%= button_to "Create #{holiday.name} Discount", new_merchant_bulk_discount_path(@merchant), { params: { holiday: "#{holiday.name}"}, method: :get } %>
+        <% else %>
+          <%= link_to "#{holiday.name} Discount", merchant_bulk_discount_path(@merchant, @merchant.bulk_discounts.find_holiday_discount(holiday.name)) %>
+        <% end %>
       </li>
     <% end %>
   </ul>
