@@ -12,6 +12,7 @@ RSpec.describe 'New Bulk Discount' do
   end
   it 'has form to fill out information for new discount and is redirected to index page' do
     click_link 'New Discount'
+    fill_in(:bulk_discount_name, with: '25% Discount')
     fill_in(:bulk_discount_quantity, with: 15)
     fill_in(:bulk_discount_percentage, with: 25)
     click_button('Create Discount')
@@ -22,6 +23,7 @@ RSpec.describe 'New Bulk Discount' do
   end
   it 'returns an error when informtion is not filled out correctly' do
     click_link 'New Discount'
+    fill_in(:bulk_discount_name, with: '10% Discount')
     fill_in(:bulk_discount_quantity, with: '')
     fill_in(:bulk_discount_percentage, with: 125)
     click_button('Create Discount')
