@@ -40,6 +40,8 @@ Bulk Discounts is a week long individual project during Mod 2 of Turing School's
 
 The goal was to create add discounts to an already functioning Rails Application that can take users through a website and give them the ability to use CRUD commands to Create, Read, Update, and Destroy data while being able to view the changes on the website(Rails Application).
 
+One challenge with this project was deciding the best methods to calculate discounted revenue and which ActiveRecord queries would best accomplish this task while using as little Ruby as possible. 
+
 
 ## Tools Used
 
